@@ -265,7 +265,7 @@ body{
 </div>
 
 <audio id="bgMusic" preload="auto">
-  <source src="bgmusic.m4a" type="audio/mpeg">
+  <source src="bgmusic.m4a" type="audio/mp4">
 </audio>
 
 <script>
@@ -374,8 +374,9 @@ function formStarText(){
     const img=offCtx.getImageData(0,0,off.width,off.height).data;
 
     particles=[];
-    for(let y=0;y<off.height;y+=6){
-        for(let x=0;x<off.width;x+=6){
+    const gap = window.innerWidth < 600 ? 10 : 6;
+    for(let y=0;y<off.height;y+=gap){
+        for(let x=0;x<off.width;x+=gap){
             const index=(y*off.width+x)*4;
             if(img[index+3]>128){
                 particles.push({
@@ -399,12 +400,14 @@ function animateParticles(){
         const oy=Math.cos(driftY)*25;
 
         particles.forEach(p=>{
-            p.x += (p.baseX+ox - p.x)*0.06;
-            p.y += (p.baseY+oy - p.y)*0.06;
+            const ease = window.innerWidth < 600 ? 0.12 : 0.06;
+            p.x += (p.baseX+ox - p.x)*ease;
+            p.y += (p.baseY+oy - p.y)*ease;
 
             ctx.fillStyle="rgba(255,255,255,0.98)";
             ctx.beginPath();
-            ctx.arc(p.x,p.y,1.9,0,Math.PI*2);
+            const size = window.innerWidth < 600 ? 2.6 : 1.9;
+            ctx.arc(p.x,p.y,size,0,Math.PI*2);
             ctx.fill();
         });
         requestAnimationFrame(frame);
